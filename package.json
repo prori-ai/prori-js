@@ -1,0 +1,43 @@
+{
+  "name": "prori",
+  "version": "0.0.1",
+  "description": "Official Prori SDK for JavaScript and TypeScript",
+  "license": "MIT",
+  "author": "Prori <hello@prori.ai>",
+  "homepage": "https://prori.ai",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prori-ai/prori-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/prori-ai/prori-js/issues"
+  },
+  "keywords": [
+    "prori",
+    "prori.ai",
+    "distribution",
+    "campaigns",
+    "usdc",
+    "sdk"
+  ],
+  "type": "module",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "default": "./index.js"
+    }
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "sideEffects": false
+}
