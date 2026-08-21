@@ -31,9 +31,11 @@ jobs:
 
       - run: npm run build
 
-      # `provenance` and `access` come from package.json publishConfig.
+      # `access` comes from package.json publishConfig.
       # Swap NODE_AUTH_TOKEN for npm Trusted Publishing once the package is
       # linked to this repo on npmjs.com — then no secret is needed at all.
-      - run: npm publish
+      # --provenance here rather than in publishConfig, so a local `npm publish`
+      # still works without CI OIDC.
+      - run: npm publish --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
