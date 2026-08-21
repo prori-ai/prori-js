@@ -1,0 +1,39 @@
+name: Publish to npm
+
+# Publishing from CI is what earns the green "Provenance" badge on npmjs.com:
+# npm cryptographically links the tarball to this workflow run and this commit,
+# which is the cheapest trust signal an "official SDK" package can carry.
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  # Required for provenance — without it npm cannot mint the attestation.
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run typecheck
+
+      - run: npm run build
+
+      # `provenance` and `access` come from package.json publishConfig.
+      # Swap NODE_AUTH_TOKEN for npm Trusted Publishing once the package is
+      # linked to this repo on npmjs.com — then no secret is needed at all.
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

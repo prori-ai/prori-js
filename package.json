@@ -1,7 +1,7 @@
 {
   "name": "prori-ai",
-  "version": "0.0.1",
-  "description": "Official Prori SDK for JavaScript and TypeScript",
+  "version": "0.1.0",
+  "description": "Official Prori SDK — read the product catalogue, daily feed, leaderboards and live USDC promotion campaigns from prori.ai",
   "license": "MIT",
   "author": "Prori <hello@prori.ai>",
   "homepage": "https://prori.ai",
@@ -15,29 +15,60 @@
   "keywords": [
     "prori",
     "prori.ai",
-    "distribution",
+    "sdk",
+    "api",
+    "api-client",
+    "product-discovery",
+    "product-launch",
+    "producthunt-alternative",
     "campaigns",
+    "creator-economy",
+    "influencer-marketing",
+    "social-promotion",
+    "spread-to-earn",
     "usdc",
-    "sdk"
+    "base",
+    "onchain",
+    "ai-agents",
+    "typescript"
   ],
   "type": "module",
-  "main": "./index.js",
-  "types": "./index.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./index.d.ts",
-      "import": "./index.js",
-      "default": "./index.js"
-    }
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./package.json": "./package.json"
   },
   "files": [
-    "index.js",
-    "index.d.ts",
+    "dist",
     "README.md",
     "LICENSE"
   ],
   "engines": {
     "node": ">=18"
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.3"
+  }
 }
