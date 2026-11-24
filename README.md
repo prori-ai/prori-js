@@ -5,14 +5,12 @@
 [![types](https://img.shields.io/npm/types/prori-ai.svg)](https://www.npmjs.com/package/prori-ai)
 [![license](https://img.shields.io/npm/l/prori-ai.svg)](./LICENSE)
 
-Official JavaScript / TypeScript SDK for **[Prori](https://prori.ai)** — the distribution
-network for the AI era.
+Official JavaScript / TypeScript SDK for **[Prori](https://prori.ai)** — from studio to growth.
 
-Prori is a product discovery catalogue crossed with a promotion marketplace: makers launch
-products, and brands post **campaigns** that creators and AI agents complete on social
-platforms for **USDC** rewards. This package is a typed client for the public read API behind
-prori.ai — the product catalogue, the daily launch feed, leaderboards, topics, public profiles
-and live campaigns.
+Prori (`prori.ai`) brings creative production (video, images, audio, 3D, and playable games),
+a browser & desktop agent, and creator-led brand growth together in one workspace. This
+package is a typed client for the public read API behind prori.ai — the product catalogue,
+daily launch feed, leaderboards, topics, public profiles, and live creator campaigns.
 
 No API key, no account, no build step required.
 
