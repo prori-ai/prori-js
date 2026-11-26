@@ -16,6 +16,8 @@ import type {
 
 export { API_BASE, HOMEPAGE, ProriClient, ProriError, VERSION } from './client.js';
 export type { ProriClientOptions } from './client.js';
+export { ProriToolsClient, ProriToolsError } from './tools.js';
+export type * from './tools.js';
 export type * from './types.js';
 
 /**

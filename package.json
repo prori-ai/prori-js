@@ -1,7 +1,7 @@
 {
   "name": "prori-ai",
-  "version": "0.1.1",
-  "description": "Official JavaScript / TypeScript SDK for Prori (prori.ai).",
+  "version": "0.2.0",
+  "description": "Official JavaScript / TypeScript SDK and CLI for Prori (prori.ai) — Tools Gateway, product catalogue, and campaigns.",
   "license": "MIT",
   "author": "Prori <hello@prori.ai>",
   "homepage": "https://prori.ai",
@@ -27,6 +27,9 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "bin": {
+    "prori": "./dist/cli.js"
+  },
   "exports": {
     ".": {
       "import": {
@@ -55,9 +58,11 @@
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit",
+    "test": "node --test tests/*.test.mjs",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
+    "@types/node": "^18.19.130",
     "tsup": "^8.5.0",
     "typescript": "^5.9.3"
   }

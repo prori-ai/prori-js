@@ -1,3 +1,6 @@
+import { API_BASE, ProriError, query } from './shared.js';
+import { ProriToolsClient } from './tools.js';
+import type { ProriToolsClientOptions } from './tools.js';
 import type {
   Campaign,
   CampaignListParams,
@@ -14,9 +17,10 @@ import type {
   TopicItem,
 } from './types.js';
 
-export const VERSION = '0.1.0';
+export { API_BASE, ProriError } from './shared.js';
+
+export const VERSION = '0.2.0';
 export const HOMEPAGE = 'https://prori.ai';
-export const API_BASE = 'https://api.bnbot.ai';
 
 /** Default per-request deadline. Public endpoints are cached and should be fast. */
 const DEFAULT_TIMEOUT_MS = 15_000;
@@ -48,6 +52,8 @@ function backoffMs(attempt: number, retryAfter: string | null): number {
 export interface ProriClientOptions {
   /** Override the API origin. Defaults to {@link API_BASE}. */
   baseUrl?: string;
+  /** Bearer key for the Tools Gateway. The public API stays unauthenticated. */
+  apiKey?: string;
   /** Inject a `fetch` implementation — useful for tests, proxies and edge runtimes. */
   fetch?: typeof globalThis.fetch;
   /** Extra headers sent with every request. */
@@ -59,33 +65,6 @@ export interface ProriClientOptions {
    * Defaults to 2. Set to 0 to fail fast.
    */
   retries?: number;
-}
-
-/**
- * Thrown for any non-2xx response. Carries the parsed body when the API
- * returned JSON, so FastAPI's `detail` payload survives the round trip.
- */
-export class ProriError extends Error {
-  readonly status: number;
-  readonly url: string;
-  readonly body: unknown;
-
-  constructor(status: number, statusText: string, url: string, body: unknown) {
-    super(`Prori API ${status} ${statusText} — ${url}`);
-    this.name = 'ProriError';
-    this.status = status;
-    this.url = url;
-    this.body = body;
-  }
-}
-
-function query(params: Record<string, string | number | boolean | undefined>): string {
-  const q = new URLSearchParams();
-  for (const [key, value] of Object.entries(params)) {
-    if (value !== undefined) q.set(key, String(value));
-  }
-  const s = q.toString();
-  return s ? `?${s}` : '';
 }
 
 /**
@@ -102,6 +81,8 @@ export class ProriClient {
   readonly #headers: Record<string, string>;
   readonly #timeoutMs: number;
   readonly #retries: number;
+  readonly #toolsOptions: ProriToolsClientOptions;
+  #tools?: ProriToolsClient;
 
   constructor(options: ProriClientOptions = {}) {
     this.baseUrl = (options.baseUrl ?? API_BASE).replace(/\/$/, '');
@@ -109,12 +90,18 @@ export class ProriClient {
     this.#headers = { accept: 'application/json', ...options.headers };
     this.#timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
     this.#retries = Math.max(0, options.retries ?? DEFAULT_RETRIES);
+    this.#toolsOptions = { ...options, fetch: this.#fetch, headers: this.#headers };
 
     if (typeof this.#fetch !== 'function') {
       throw new TypeError(
         'No global fetch available. Pass one via `new ProriClient({ fetch })`, or run Node 18+.',
       );
     }
+  }
+
+  /** Tools Gateway client with the same explicitly configured origin and fetch. */
+  get tools(): ProriToolsClient {
+    return (this.#tools ??= new ProriToolsClient(this.#toolsOptions));
   }
 
   /**
